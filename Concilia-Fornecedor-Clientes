@@ -1,0 +1,68 @@
+Sub CONCILIA_FORNECEDOR()
+
+
+Application.ScreenUpdating = False
+Application.Calculation = False
+
+
+UL = Range("B50000").End(xlUp).Row '---------Variavel para encontrar ultima linha preenchida na planiha)
+
+For CONCILIA = 2 To UL '-----Primeiro bloco de for para olhar linha por linha por Fornecedor ou cliente
+NF = Cells(CONCILIA, 3) '------- Variavel que armazena numero da NF
+fornecedor = Cells(CONCILIA, 2) '----- Variavel que armazena nome do Fornecedor ou cliente
+        
+        For soma_credito = 2 To UL ' -------- Segundo bloco de For para somar os valores a credito
+            If Cells(soma_credito, 2).Value = fornecedor And Cells(soma_credito, 3).Value = NF Then
+            valor_a_credito = Cells(soma_credito, 9).Value '---------- variavel para armazenar o valor do credito da linha
+            VALOR_CREDITO = valor_a_credito + VALOR_CREDITO ' variavel para armazenar a soma total dos creditos
+            End If
+        Next
+        
+        For soma_debito = 2 To UL  '-------- terceiro bloco de for para somar os valores a debito
+        
+        If Cells(soma_debito, 2).Value = fornecedor And Cells(soma_debito, 3).Value = NF Then
+            valor_a_debito = Cells(soma_debito, 8).Value '---------- variavel para armazenar o valor do debito da linha
+            valor_debito = valor_a_debito + valor_debito ' variavel para armazenar a soma total dos debitos
+            End If
+        Next
+        
+            End If
+        Next
+
+
+
+        If VALOR_CREDITO = 0 And valor_debito = 0 Then '------ Variavel para caso o valor total de debiito e credito forem 0 nao fazer nada
+        
+        ElseIf VALOR_CREDITO = valor_debito Then 'Boloco que verifica se o valor a debito e igual o valor a credito e exclui a linha
+            For EXclui_nf_quitada = 2 To UL
+            If Cells(EXclui_nf_quitada, 3) = NF And Cells(EXclui_nf_quitada, 2) = fornecedor Then
+            Rows(EXclui_nf_quitada).Delete Shift:=xlUp
+            EXclui_nf_quitada = EXclui_nf_quitada - 1
+            End If
+            Next
+            CONCILIA = CONCILIA - 1
+            End If
+        UL = Range("B50000").End(xlUp).Row
+        valor_debito = 0
+        VALOR_CREDITO = 0
+        
+        
+Next
+
+
+
+
+
+Application.ScreenUpdating = False
+Application.Calculation = False
+
+MsgBox ("Conta Conciliada!")
+
+
+
+
+
+
+
+
+End Sub
